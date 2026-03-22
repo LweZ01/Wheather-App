@@ -1,0 +1,336 @@
+/* ===========================
+   VARIABLES & RESET
+=========================== */
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --border: #2a2a3a;
+  --accent: #e8ff3c;
+  --accent2: #3cffe8;
+  --text: #f0f0f5;
+  --muted: #666680;
+  --card-bg: #13131e;
+  --radius: 2px;
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===========================
+   BACKGROUND GRID
+=========================== */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232, 255, 60, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 255, 60, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header-tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 14vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.title-accent {
+  color: var(--accent);
+  -webkit-text-stroke: 0px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 300;
+  margin-top: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+/* ===========================
+   CONTROLS
+=========================== */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.select-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+select {
+  width: 100%;
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 0.85rem 2.5rem 0.85rem 1rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+select:focus {
+  border-color: var(--accent);
+}
+
+select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+#get-weather-btn {
+  background: var(--accent);
+  color: #0a0a0f;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  padding: 0 1.6rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+
+#get-weather-btn:hover {
+  background: #f5ff70;
+}
+
+#get-weather-btn:active {
+  transform: scale(0.97);
+}
+
+/* ===========================
+   WEATHER CARD
+=========================== */
+.weather-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.weather-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.4rem;
+}
+
+.location-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.icon-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+#weather-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: none;
+}
+
+#weather-icon.loaded {
+  display: block;
+}
+
+.weather-type {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--accent2);
+  text-align: right;
+}
+
+/* Labels & Values */
+.label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.value.big {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+/* Temperature Row */
+.temp-row {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-end;
+}
+
+.temp-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.temp-feels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.temp-big {
+  font-size: 3.8rem;
+  color: var(--accent);
+  line-height: 1;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.stat-box {
+  background: var(--card-bg);
+  padding: 1rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+.stat-icon {
+  font-size: 1.1rem;
+  margin-bottom: 0.1rem;
+}
+
+.stat-box .value {
+  font-size: 1.15rem;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 480px) {
+  .controls {
+    flex-direction: column;
+  }
+
+  #get-weather-btn {
+    padding: 0.85rem;
+    font-size: 1rem;
+  }
+
+  .temp-big {
+    font-size: 3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
